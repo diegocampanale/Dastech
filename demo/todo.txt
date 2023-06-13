@@ -1,0 +1,105 @@
+- 
+index.php
+-   Impaginazione tabella con filtri per categoria e ordinamento crescente o descrescente
+-   Barra di ricerca
+
+    !utilizzare ajax e javascript per gestire i dati filtrati del database in modo dinamico
+
+carica.php
+
+scarica.php
+
+edit.php        modal bootstrap
+
+new.php         ?modal bootstrap
+
+
+// righe tabella inventario da database
+<?php
+                    // Query per selezionare i dati dalla tabella "Articoli"
+                    $query = "SELECT * FROM Articoli";
+
+                    // Esecuzione della query
+                    $result = mysqli_query($conn, $query);
+                    // Ciclo per popolare le righe della tabella con i dati
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        echo "<tr>";
+                        echo "<td><div class='form-check'><input class='form-check-input' type='checkbox' value='".$row['ID']."' id='flexCheckDefault'></div></td>";
+                        echo "<td scope='row'>".$row['ID']."</td>";
+                        echo "<td>".$row['nome']."</td>";
+                        echo "<td>".$row['quantita']."</td>";
+                        echo "<td>".$row['fila'].$row['sezione'].$row['piano']."</td>";
+                        echo "<td>".$row['codice_ean']."</td>";
+                        echo "<td>".$row['categoria']."</td>";
+                        echo "<td><button class='btn btn-secondary btn-sm' type='button'><svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-file-earmark-check-fill' viewBox='0 0 16 16'><path d='M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm1.354 4.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708.708z'/></svg></button></td>";
+                        echo "<td><button class='btn btn-secondary btn-sm' type='button'><i class='fas fa-pencil-alt'></i></button></td>";
+                        echo "</tr>";
+                    }
+
+                    ?>
+
+// tabella bootstrap
+<div class="table-responsive-sm">
+            <table class="table table-hover  table-sm align-middle" id="table_Articoli">
+                <thead class="table-light">
+                    <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Quantità</th>
+                    <th scope="col">Settore</th>
+                    <th scope="col">Codice EAN</th>
+                    <th scope="col">Categoria</th>
+                    <th scope='col'></th>
+                    <th scope='col'></th>
+                    </tr>
+                </thead>
+                <tbody class="" id="table_body">
+                    <tr>
+                        <td><div class='form-check'><input class='form-check-input' type='checkbox' value='1' id='flexCheckDefault'></div></td>
+                        <td scope='row'>1</td>
+                        <td>Lampada LED</td>
+                        <td>10</td>
+                        <td>1A1</td>
+                        <td>123123123123</td>
+                        <td>Illuminazione</td>
+                        <td><button class='btn btn-secondary btn-sm' type='button'><svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-file-earmark-check-fill' viewBox='0 0 16 16'><path d='M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm1.354 4.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708.708z'/></svg></button></td>
+                        <td><button class='btn btn-secondary btn-sm' type='button'><i class='fas fa-pencil-alt'></i></button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+// select categoria
+<!-- FILTER -->
+        <form>
+            <?php
+            $query = 'SELECT categoria FROM Articoli GROUP BY categoria;';
+            $result = mysqli_query($conn, $query);
+            echo ' <select name="categoria" id="categoria">';
+            echo '<option value="">Categoria</option>';
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo '<option value="'.$row['categoria'].'">'.$row['categoria'].'</option>';
+            }
+            echo '</select>';
+            ?>
+        </form>
+        </div>
+        
+
+-- 30/05 -------------
+
+- gestione inserimento nuori articoli:
+    - validazione e sanificazione
+    - inzio al database con statement parametrizzazione e bind
+    - gestione errori inserimenti
+    - check generale
+
+
+
+
+    <?php if (isset($errorsArticolo['not_nome'])) { echo 'is-invalid'; }else{if (isset($errorsArticolo['nome_lungo'])) { echo 'is-invalid'; }} ?>
+    
+    <?php if(isset($_SESSION['datiArticoli'])){echo 'value="'.$_SESSION['datiArticoli']['nome'].'"';} ?>
+
+    <?php if (isset($errorsArticolo['not_nome'])) { echo '<div id="nomeArticoloFeedback" class="invalid-feedback">'.$errorsArticolo['not_nome'].'</div>'; }else{if (isset($errorsArticolo['nome_lungo'])) { echo '<div id="nomeArticoloFeedback" class="invalid-feedback">'.$errorsArticolo['nome_lungo'].'</div>'; }} ?>
